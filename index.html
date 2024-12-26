@@ -1,15 +1,4 @@
 
-
-
-
-
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="ar">
 <head>
@@ -22,11 +11,12 @@
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f8f9fa;
-            color: #2d2d2d;
+            background-color: #f0f2f5;
+            color: #333;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         header {
-            background-color: #007bff;
+            background-color: #0069d9;
             color: white;
             padding: 20px;
             text-align: center;
@@ -38,7 +28,6 @@
             display: flex;
             justify-content: center;
             gap: 20px;
-            flex-wrap: wrap;
         }
         nav ul li {
             display: inline;
@@ -47,15 +36,15 @@
             color: white;
             text-decoration: none;
             font-weight: bold;
-            transition: color 0.3s;
+            transition: color 0.3s ease;
         }
         nav ul li a:hover {
-            color: #ffd700;
+            color: #ffc107;
         }
         main {
             padding: 20px;
             text-align: center;
-            margin-top: 10px;
+            animation: fadeIn 0.5s ease-in;
         }
         .section {
             background-color: #6c757d;
@@ -69,36 +58,52 @@
             width: calc(100% - 20px);
             max-width: 300px;
             box-sizing: border-box;
+            animation: popIn 0.5s ease-out;
         }
         .section:hover {
             background-color: #5a6268;
             transform: scale(1.05);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-        .video-container, #channels, #movies, #codeInput {
-            display: none;
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
             margin-top: 20px;
         }
-        .channel {
-            background-color: #17a2b8;
+        .channel-button, .video-button {
+            background-color: #343a40;
             color: white;
             padding: 10px;
-            margin: 5px;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
-            display: inline-block;
-            width: calc(100% - 10px);
-            max-width: 200px;
-            box-sizing: border-box;
+            transition: background-color 0.3s, transform 0.3s;
+            text-align: center;
+            font-weight: bold;
         }
-        .channel:hover {
-            background-color: #138496;
+        .channel-button:hover, .video-button:hover {
+            background-color: #495057;
             transform: scale(1.05);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .video-container {
+            margin-top: 20px;
+            display: none;
+            text-align: center;
+        }
+        iframe {
+            width: 100%;
+            max-width: 640px;
+            height: 360px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        iframe:hover {
+            transform: scale(1.02);
         }
         footer {
-            background-color: #007bff;
+            background-color: #0069d9;
             color: white;
             text-align: center;
             padding: 10px 0;
@@ -144,6 +149,7 @@
             border-radius: 8px;
             color: #2d2d2d;
             width: 100%;
+            transition: border-color 0.3s ease;
         }
         .input-group input:focus {
             border-color: #ffc107;
@@ -164,9 +170,6 @@
             background-color: #e0a800;
         }
         .bottom-text {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             margin-top: 20px;
             color: #ffffff;
             font-size: 15px;
@@ -180,23 +183,13 @@
         .bottom-text a:hover {
             color: #e0a800;
         }
-
-        @media (min-width: 600px) {
-            .section {
-                width: calc(50% - 20px);
-            }
-            .channel {
-                width: calc(33% - 10px);
-            }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
-
-        @media (min-width: 900px) {
-            .section {
-                width: calc(33.333% - 20px);
-            }
-            .channel {
-                width: calc(25% - 10px);
-            }
+        @keyframes popIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -207,39 +200,61 @@
                 const username = $("#username").val();
                 const password = $("#password").val();
                 if (username === "hosnitheking" && password === "hosnitheking") {
-                    $(".login-container").hide();
-                    $("#options").show();
+                    $(".login-container").fadeOut(function() {
+                        $("#options").fadeIn();
+                    });
                 } else {
                     alert("خطأ في اسم المستخدم أو كلمة المرور");
                 }
             });
 
             $("#liveBroadcast").click(function() {
-                $("#options").hide();
-                $("#channels").show();
+                $("#channels").fadeIn();
+                $("#movies, .video-container").hide();
+                $("#videoPlayer").attr("src", ""); // إزالة الفيديو عند التحويل
             });
 
             $("#moviesSection").click(function() {
-                $("#codeInput").show();
-            });
-
-            $("#submitCode").click(function() {
-                const code = $("#code").val();
+                const code = prompt("الرجاء إدخال الكود للوصول إلى قسم الأفلام:");
                 if (code === "2239") {
-                    $("#codeInput").hide();
-                    $("#options").hide();
-                    $("#movies").show();
+                    $("#movies").fadeIn();
+                    $("#channels, .video-container").hide();
+                    $("#videoPlayer").attr("src", ""); // إزالة الفيديو عند التحويل
                 } else {
                     alert("الكود غير صحيح");
                 }
             });
 
-            $(".channel").click(function() {
+            $(".channel-button").click(function() {
                 const videoUrl = $(this).data("video");
-                $("#videoSource").attr("src", videoUrl);
-                $("#videoPlayer")[0].load();
-                $("#videoContainer").show();
+                $("#videoPlayer").attr("src", videoUrl);
+                $(".video-container").fadeIn();
+                $('html, body').animate({
+                    scrollTop: $(".video-container").offset().top
+                }, 1000);
             });
+
+            $(".video-button").click(function() {
+                const videoUrl = $(this).data("video");
+                $("#videoPlayer").attr("src", videoUrl);
+                $(".video-container").fadeIn();
+                $('html, body').animate({
+                    scrollTop: $(".video-container").offset().top
+                }, 1000);
+            });
+
+            // تحسين سرعة تحميل الفيديو
+            const preloadVideos = () => {
+                $(".video-button, .channel-button").each(function() {
+                    const videoUrl = $(this).data("video");
+                    const link = document.createElement('link');
+                    link.rel = 'preload';
+                    link.as = 'video';
+                    link.href = videoUrl;
+                    document.head.appendChild(link);
+                });
+            };
+            preloadVideos();
         });
     </script>
 </head>
@@ -247,10 +262,7 @@
     <header>
         <nav>
             <ul>
-                <li><a href="#home">الرئيسية</a></li>
-                <li><a href="#channels">البث المباشر</a></li>
-                <li><a href="#movies">الأفلام</a></li>
-                <li><a href="#login">تسجيل الدخول</a></li>
+                <li><a href="javascript:void(0)" id="loginPage">تسجيل الدخول</a></li>
             </ul>
         </nav>
         <h1>مرحبًا بكم في موقع البث والأفلام</h1>
@@ -277,49 +289,50 @@
 
         <!-- خيارات بعد تسجيل الدخول -->
         <section id="options" style="display: none;">
-            <div id="liveBroadcast" class="section">البث المباشر</div>
-            <div id="moviesSection" class="section">الأفلام</div>
-        </section>
-
-        <!-- إدخال الكود للوصول إلى الأفلام -->
-        <section id="codeInput">
-            <p>الرجاء إدخال الكود للوصول إلى قسم الأفلام:</p>
-            <input type="text" id="code" placeholder="أدخل الكود هنا"/>
-            <button id="submitCode">تأكيد</button>
+            <div class="section" id="liveBroadcast">البث المباشر</div>
+            <div class="section" id="moviesSection">الأفلام</div>
         </section>
 
         <!-- قسم القنوات -->
-        <section id="channels">
+        <section id="channels" style="display: none;">
             <h2>القنوات المتاحة</h2>
-            <div class="channel" data-video="http://het131a.4rouwanda-shop.store/live/918454578001/index.m3u8?t=8jkikFIdtbpikGQ_mMm7Sg&e=1734890215">Bein 1</div>
-            <div class="channel" data-video="http://het120a.4rouwanda-shop.store/live/69854211/index.m3u8?t=qNvUJEROxN2ML_tyD57-_w&e=1734890209">Bein 2</div>
-            <div class="channel" data-video="http://het111a.4rouwanda-shop.store/live/645587700/index.m3u8?t=3A5-cdbVcfm8QHwNYANQLA&e=1734890210">Bein 3</div>
-            <div class="channel" data-video="http://het108a.4rouwanda-shop.store/live/9787488847/index.m3u8?t=AqJ3shHRDaxRHnR3XZqT5g&e=1734890359">Bein 4</div>
-            <div class="channel" data-video="http://het128a.4rouwanda-shop.store/live/610303030/index.m3u8?t=qzVpxwlMHxJA3iUPSvJXDg&e=1734890380">Bein 5</div>
-            <div class="channel" data-video="http://het121a.4rouwanda-shop.store/live/33523510/index.m3u8?t=LhQtBahS88474JtU5eF2Vw&e=1734890618">Bein 7</div>
-            <div class="channel" data-video="http://het127a.4rouwanda-shop.store/live/996251000/index.m3u8?t=heAZ_VuOSjVy1Vv_I-dipQ&e=1734890556">Bein 8</div>
+            <div class="grid-container">
+                <div class="channel-button" data-video="http://het131a.4rouwanda-shop.store/live/918454578001/index.m3u8?t=8jkikFIdtbpikGQ_mMm7Sg&e=1734890215">Bein 1</div>
+                <div class="channel-button" data-video="http://het120a.4rouwanda-shop.store/live/69854211/index.m3u8?t=qNvUJEROxN2ML_tyD57-_w&e=1734890209">Bein 2</div>
+                <div class="channel-button" data-video="http://het111a.4rouwanda-shop.store/live/645587700/index.m3u8?t=3A5-cdbVcfm8QHwNYANQLA&e=1734890210">Bein 3</div>
+                <div class="channel-button" data-video="http://het108a.4rouwanda-shop.store/live/9787488847/index.m3u8?t=AqJ3shHRDaxRHnR3XZqT5g&e=1734890359">Bein 4</div>
+                <div class="channel-button" data-video="http://het128a.4rouwanda-shop.store/live/610303030/index.m3u8?t=qzVpxwlMHxJA3iUPSvJXDg&e=1734890380">Bein 5</div>
+                <div class="channel-button" data-video="http://het121a.4rouwanda-shop.store/live/33523510/index.m3u8?t=LhQtBahS88474JtU5eF2Vw&e=1734890618">Bein 7</div>
+                <div class="channel-button" data-video="http://het127a.4rouwanda-shop.store/live/996251000/index.m3u8?t=heAZ_VuOSjVy1Vv_I-dipQ&e=1734890556">Bein 8</div>
+            </div>
         </section>
 
         <!-- قسم الأفلام -->
-        <section id="movies">
+        <section id="movies" style="display: none;">
             <h2>الأفلام المتاحة</h2>
-            <p>هنا قائمة الأفلام:</p>
-            <div class="video-container">
-                <iframe src="https://www.xnxx.com/embedframe/kbouodd9d2f" frameborder="0" width="100%" height="400" scrolling="no" allowfullscreen="allowfullscreen"></iframe>
+            <div class="grid-container">
+                <div class="video-button" data-video="https://www.pornhub.com/embed/65a579d3889d6">الفيديو 1</div>
+                <div class="video-button" data-video="https://www.pornhub.com/embed/ph637daa56a98eb">الفيديو 2</div>
+                <div class="video-button" data-video="https://www.pornhub.com/embed/65509326a6dbb">الفيديو 3</div>
+                <div class="video-button" data-video="https://www.pornhub.com/embed/66f85fe7284a1">الفيديو 4</div>
+                <div class="video-button" data-video="https://www.pornhub.com/embed/663e461f58654">الفيديو 5</div>
+                <div class="video-button" data-video="https://www.pornhub.com/embed/6733af6f67e99">الفيديو 6</div>
+                <div class="video-button" data-video="https://www.pornhub.com/embed/661973cad2431">الفيديو 7</div>
+                <div class="video-button" data-video="https://www.pornhub.com/embed/6723d9f54c9aa">الفيديو 8</div>
+                <div class="video-button" data-video="https://www.pornhub.com/embed/6708ac3058fb7">الفيديو 9</div>
+                <div class="video-button" data-video="https://www.pornhub.com/embed/ph634fd162dcc97">الفيديو 10</div>
+                <div class="video-button" data-video="https://www.pornhub.com/embed/ph63b66ff1e6b0c">الفيديو 11</div>
+                <div class="video-button" data-video="https://www.pornhub.com/embed/ph56efb8e320a73">الفيديو 12</div>
             </div>
         </section>
 
         <!-- مشغل الفيديو -->
-        <section id="videoContainer" class="video-container">
-            <video id="videoPlayer" controls style="width: 100%; max-width: 800px; border-radius: 10px; border: solid 2px #bdc3c7; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-                <source id="videoSource" src="" type="application/x-mpegURL">
-                متصفحك لا يدعم عرض الفيديو.
-            </video>
-        </section>
+        <div class="video-container">
+            <iframe id="videoPlayer" src="" allowfullscreen></iframe>
+        </div>
     </main>
     <footer>
         <p>&copy; 2024 موقع البث والأفلام</p>
     </footer>
 </body>
-</html> 
-هل هذا موقع مثالي
+</html>
