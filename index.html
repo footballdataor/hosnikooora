@@ -1,0 +1,325 @@
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقع البث والأفلام</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #2d2d2d;
+        }
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        nav ul li {
+            display: inline;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        nav ul li a:hover {
+            color: #ffd700;
+        }
+        main {
+            padding: 20px;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .section {
+            background-color: #6c757d;
+            color: white;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+            display: inline-block;
+            width: calc(100% - 20px);
+            max-width: 300px;
+            box-sizing: border-box;
+        }
+        .section:hover {
+            background-color: #5a6268;
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .video-container, #channels, #movies, #codeInput {
+            display: none;
+            margin-top: 20px;
+        }
+        .channel {
+            background-color: #17a2b8;
+            color: white;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+            display: inline-block;
+            width: calc(100% - 10px);
+            max-width: 200px;
+            box-sizing: border-box;
+        }
+        .channel:hover {
+            background-color: #138496;
+            transform: scale(1.05);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        footer {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .login-container {
+            background-color: #343a40;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            max-width: 90%;
+            width: 100%;
+            text-align: center;
+            margin: 40px auto;
+        }
+        .login-form {
+            display: flex;
+            flex-direction: column;
+        }
+        .heading {
+            color: #ffffff;
+            font-weight: 500;
+            font-size: 30px;
+            margin-bottom: 5px;
+        }
+        .paragraph {
+            color: #ffffff;
+            font-weight: 400;
+            font-size: 15px;
+            margin-bottom: 15px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-group input {
+            background: none;
+            border: 1px solid #ced4da;
+            padding: 15px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            color: #2d2d2d;
+            width: 100%;
+        }
+        .input-group input:focus {
+            border-color: #ffc107;
+            outline: none;
+        }
+        button {
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: #ffc107;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #e0a800;
+        }
+        .bottom-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 400;
+        }
+        .bottom-text a {
+            color: #ffc107;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .bottom-text a:hover {
+            color: #e0a800;
+        }
+
+        @media (min-width: 600px) {
+            .section {
+                width: calc(50% - 20px);
+            }
+            .channel {
+                width: calc(33% - 10px);
+            }
+        }
+
+        @media (min-width: 900px) {
+            .section {
+                width: calc(33.333% - 20px);
+            }
+            .channel {
+                width: calc(25% - 10px);
+            }
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("form.login-form").submit(function(event) {
+                event.preventDefault();
+                const username = $("#username").val();
+                const password = $("#password").val();
+                if (username === "hosnitheking" && password === "hosnitheking") {
+                    $(".login-container").hide();
+                    $("#options").show();
+                } else {
+                    alert("خطأ في اسم المستخدم أو كلمة المرور");
+                }
+            });
+
+            $("#liveBroadcast").click(function() {
+                $("#options").hide();
+                $("#channels").show();
+            });
+
+            $("#moviesSection").click(function() {
+                $("#codeInput").show();
+            });
+
+            $("#submitCode").click(function() {
+                const code = $("#code").val();
+                if (code === "2239") {
+                    $("#codeInput").hide();
+                    $("#options").hide();
+                    $("#movies").show();
+                } else {
+                    alert("الكود غير صحيح");
+                }
+            });
+
+            $(".channel").click(function() {
+                const videoUrl = $(this).data("video");
+                $("#videoSource").attr("src", videoUrl);
+                $("#videoPlayer")[0].load();
+                $("#videoContainer").show();
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#home">الرئيسية</a></li>
+                <li><a href="#channels">البث المباشر</a></li>
+                <li><a href="#movies">الأفلام</a></li>
+                <li><a href="#login">تسجيل الدخول</a></li>
+            </ul>
+        </nav>
+        <h1>مرحبًا بكم في موقع البث والأفلام</h1>
+    </header>
+    <main>
+        <!-- نموذج تسجيل الدخول -->
+        <section id="login" class="login-container">
+            <form class="login-form">
+                <p class="heading">تسجيل الدخول</p>
+                <p class="paragraph">قم بتسجيل الدخول إلى حسابك</p>
+                <div class="input-group">
+                    <input required placeholder="اسم المستخدم" id="username" type="text"/>
+                </div>
+                <div class="input-group">
+                    <input required placeholder="كلمة المرور" id="password" type="password"/>
+                </div>
+                <button type="submit">دخول</button>
+                <div class="bottom-text">
+                    <p>ليس لديك حساب؟ <a href="#">سجل الآن</a></p>
+                    <p><a href="#">نسيت كلمة المرور؟</a></p>
+                </div>
+            </form>
+        </section>
+
+        <!-- خيارات بعد تسجيل الدخول -->
+        <section id="options" style="display: none;">
+            <div id="liveBroadcast" class="section">البث المباشر</div>
+            <div id="moviesSection" class="section">الأفلام</div>
+        </section>
+
+        <!-- إدخال الكود للوصول إلى الأفلام -->
+        <section id="codeInput">
+            <p>الرجاء إدخال الكود للوصول إلى قسم الأفلام:</p>
+            <input type="text" id="code" placeholder="أدخل الكود هنا"/>
+            <button id="submitCode">تأكيد</button>
+        </section>
+
+        <!-- قسم القنوات -->
+        <section id="channels">
+            <h2>القنوات المتاحة</h2>
+            <div class="channel" data-video="http://het131a.4rouwanda-shop.store/live/918454578001/index.m3u8?t=8jkikFIdtbpikGQ_mMm7Sg&e=1734890215">Bein 1</div>
+            <div class="channel" data-video="http://het120a.4rouwanda-shop.store/live/69854211/index.m3u8?t=qNvUJEROxN2ML_tyD57-_w&e=1734890209">Bein 2</div>
+            <div class="channel" data-video="http://het111a.4rouwanda-shop.store/live/645587700/index.m3u8?t=3A5-cdbVcfm8QHwNYANQLA&e=1734890210">Bein 3</div>
+            <div class="channel" data-video="http://het108a.4rouwanda-shop.store/live/9787488847/index.m3u8?t=AqJ3shHRDaxRHnR3XZqT5g&e=1734890359">Bein 4</div>
+            <div class="channel" data-video="http://het128a.4rouwanda-shop.store/live/610303030/index.m3u8?t=qzVpxwlMHxJA3iUPSvJXDg&e=1734890380">Bein 5</div>
+            <div class="channel" data-video="http://het121a.4rouwanda-shop.store/live/33523510/index.m3u8?t=LhQtBahS88474JtU5eF2Vw&e=1734890618">Bein 7</div>
+            <div class="channel" data-video="http://het127a.4rouwanda-shop.store/live/996251000/index.m3u8?t=heAZ_VuOSjVy1Vv_I-dipQ&e=1734890556">Bein 8</div>
+        </section>
+
+        <!-- قسم الأفلام -->
+        <section id="movies">
+            <h2>الأفلام المتاحة</h2>
+            <p>هنا قائمة الأفلام:</p>
+            <div class="video-container">
+                <iframe src="https://www.xnxx.com/embedframe/kbouodd9d2f" frameborder="0" width="100%" height="400" scrolling="no" allowfullscreen="allowfullscreen"></iframe>
+            </div>
+        </section>
+
+        <!-- مشغل الفيديو -->
+        <section id="videoContainer" class="video-container">
+            <video id="videoPlayer" controls style="width: 100%; max-width: 800px; border-radius: 10px; border: solid 2px #bdc3c7; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                <source id="videoSource" src="" type="application/x-mpegURL">
+                متصفحك لا يدعم عرض الفيديو.
+            </video>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 موقع البث والأفلام</p>
+    </footer>
+</body>
+</html> 
+هل هذا موقع مثالي
